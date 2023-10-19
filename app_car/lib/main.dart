@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'CreateCarForm.dart';
 
 void main() {
   runApp(const MyApp());
+  //createCarForm carCreator = createCarForm();
 }
 
 class MyApp extends StatelessWidget {
@@ -31,51 +33,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
-        child: Container(
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                padding: const EdgeInsets.all(10),
-                color: Colors.grey[300],
-                width: double.infinity,
-                child: const Text("Perfil"),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 5),
-                padding: const EdgeInsets.all(10),
-                color: Colors.grey[300],
-                width: double.infinity,
-                child: const Text("Ajustes"),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 5),
-                padding: const EdgeInsets.all(10),
-                color: Colors.grey[300],
-                width: double.infinity,
-                child: const Text("Guardados"),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 5),
-                padding: const EdgeInsets.all(10),
-                color: Colors.grey[300],
-                width: double.infinity,
-                child: const Text("LogOut"),
-              )
-            ]
-          ),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.all(10),
+              color: Colors.grey[300],
+              width: double.infinity,
+              child: const Text("Perfil"),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.all(10),
+              color: Colors.grey[300],
+              width: double.infinity,
+              child: const Text("Ajustes"),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.all(10),
+              color: Colors.grey[300],
+              width: double.infinity,
+              child: const Text("Guardados"),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.all(10),
+              color: Colors.grey[300],
+              width: double.infinity,
+              child: const Text("LogOut"),
+            )
+          ]
         )
       ),
       endDrawer: Drawer( // Utilizamos endDrawer en lugar de drawer
@@ -95,13 +88,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ListTile(
-              title: Text('Ajustes'),
+              title: const Text('Ajustes'),
               onTap: () {
                 // Acción para la opción 1
               },
             ),
             ListTile(
-              title: Text('Salir'),
+              title: const Text('Salir'),
               onTap: () {
                 // Acción para la opción 2
               },
@@ -154,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20),
                       child: Image.asset('../images/EVO_V.webp',
                         width: 80, // Ancho deseado
                         height: 80,
@@ -168,10 +161,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10), // Agrega un espacio de 10 de altura
-                    Text('Kilometros'),
-                    SizedBox(height: 10), // Agrega otro espacio de 10 de altura
-                    Text('Potencia'),
+                    const SizedBox(height: 10), // Agrega un espacio de 10 de altura
+                    const Text('Kilometros'),
+                    const SizedBox(height: 10), // Agrega otro espacio de 10 de altura
+                    const Text('Potencia'),
                   ],
                 ),
               ],
@@ -180,7 +173,12 @@ class _MyHomePageState extends State<MyHomePage> {
         }),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateCarForm()),
+            );
+          },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
