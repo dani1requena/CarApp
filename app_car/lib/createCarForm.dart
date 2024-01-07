@@ -2,7 +2,7 @@ import 'dart:html' as html;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 
 class CreateCarForm extends StatefulWidget {
   const CreateCarForm({Key? key}) : super(key: key);
@@ -27,45 +27,57 @@ class _CreateCarFormState extends State<CreateCarForm> {
 
     if (_selectedImage != null && _selectedImage!.files!.isNotEmpty) {
       final file = _selectedImage!.files!.first;
+      final reader = html.FileReader();
 
-      //final reader = html.FileReader();
+      reader.onLoadEnd.listen((e) async {
+        List<int> fileBytes = Uint8List.fromList(reader.result as List<int>);
+        var multerUpload = http.MultipartFile.fromBytes(
+          'photo',
+          fileBytes,
+          filename: 'car_image.jpg',
+          contentType: MediaType('multipart', 'form-data'),
+        );
 
-      // reader.onLoad.listen((e) async {
-      //   final List<int> data = Uint8List.fromList(reader.result as List<int>);
-      //   request.files.add(
-      //     http.MultipartFile.fromBytes(
-      //       'photo',
-      //       data,
-      //       filename: 'car_image.jpg',
-      //     ),
-      //   );
-      var request = http.MultipartRequest(
-          'POST', Uri.parse('http://localhost:3000/cars'));
+        var request = http.MultipartRequest(
+            'POST', Uri.parse('http://localhost:4000/cars'));
 
-      // Adjuntar archivo
-      var MulterUpload =
-          await http.MultipartFile.fromPath('photo', file.relativePath!);
-      request.files.add(MulterUpload);
-      request.fields['brand'] = _brandController.text;
-      request.fields['kilometer'] = kmNumber.toString();
-      request.fields['horsepower'] = hpNumber.toString();
-      request.fields['authorId'] = authorIdNumber.toString();
-      request.fields['description'] = _descriptionController.text;
+        // Attach file
+        request.files.add(multerUpload);
+        request.fields['brand'] = _brandController.text;
+        request.fields['kilometer'] = kmNumber.toString();
+        request.fields['horsepower'] = hpNumber.toString();
+        request.fields['authorId'] = authorIdNumber.toString();
+        request.fields['description'] = _descriptionController.text;
 
-      try {
-        final response = await request.send();
-        if (response.statusCode == 201) {
-          print('Éxito');
-          _formKey.currentState?.reset();
-        } else {
-          print('Error: ${response.statusCode}');
+        try {
+          final response = await request.send();
+          if (response.statusCode == 201) {
+            final fileInfo = {
+              'Nombre original': multerUpload.filename,
+              'Tamaño': multerUpload.length,
+              'Tipo de contenido': multerUpload.contentType,
+            };
+
+            print('Éxito');
+            print('Datos de la imagen:');
+            fileInfo.forEach((key, value) {
+              print('$key: $value');
+            });
+
+            _formKey.currentState?.reset();
+          } else {
+            print('Error: ${response.statusCode}');
+          }
+        } catch (e) {
+          print('Error en la solicitud POST: $e');
         }
-      } catch (e) {
-        print('Error en la solicitud POST: $e');
-      }
-      //});
+      });
 
-      //reader.readAsArrayBuffer(file);
+      reader.onError.listen((e) {
+        print('Error al leer el archivo: $e');
+      });
+
+      reader.readAsArrayBuffer(file);
     }
   }
 
