@@ -61,6 +61,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void initState() {
+    fetchData().then((value) {
+      setState(() {
+        _CarDto.addAll(value);
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
@@ -95,7 +104,6 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ])),
       endDrawer: Drawer(
-        // Utilizamos endDrawer en lugar de drawer
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -183,8 +191,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: Image.asset(
-                          _CarDto[index].photo ??
-                              'imagenPath', // Reemplaza 'imagenPath' con la clave correcta para la imagen
+                          _CarDto[index]
+                              .photo, // Reemplaza 'imagenPath' con la clave correcta para la imagen
                           width: 80, // Ancho deseado
                           height: 80,
                         ),
